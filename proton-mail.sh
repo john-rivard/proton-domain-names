@@ -98,17 +98,6 @@ while getopts ":1:2:3:dfg:hmrs:v:z:" option; do
     esac
 done
 
-# echo "DKIM1=${DKIM1}"
-# echo "DKIM2=${DKIM2}"
-# echo "DKIM3=${DKIM3}"
-# echo "RG=${RG}"
-# echo "SETDMARC=${SETDMARC}"
-# echo "SETMX=${SETMX}"
-# echo "SETSPF=${SETSPF}"
-# echo "SUB=${SUB}"
-# echo "VERIFY=${VERIFY}"
-# echo "ZONE=${ZONE}"
-
 if [ ! -z ${SHOWHELP} ]; then
     usage
     exit 0
