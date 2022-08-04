@@ -91,9 +91,9 @@ while getopts ":1:2:3:dfg:hmrs:v:z:" option; do
         s)  SUB=${OPTARG}   ;;
         v)  VERIFY=${OPTARG} ;;
         z)  ZONE=${OPTARG}  ;;
-        :)  echo "Error: -${OPTARG} requires an argument."
+        :)  echo "Error: option -${OPTARG} requires an argument." 1>&2
             bad_exit        ;;
-        *)  echo "Error: unknown option -${OPTARG}"
+        *)  echo "Error: unknown option -${OPTARG}" 1>&2
             bad_exit        ;;
     esac
 done
@@ -101,6 +101,11 @@ done
 if [ ! -z ${SHOWHELP} ]; then
     usage
     exit 0
+fi
+
+if [ ! $(which az) ]; then
+    echo "Error: az is not installed. See https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-linux" 1>&2
+    exit 1
 fi
 
 if [ -z ${SUB} ]; then
