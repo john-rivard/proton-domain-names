@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (c) 2022 John Rivard
+# MIT-LICENSE
 set -e
 set -o nounset
 #set -x # debug
@@ -31,19 +33,23 @@ declare -r QUERY_CNAME="{id:id,cnameRecord:cnameRecord}"
 declare -r QUERY_MX="{id:id,mxRecords:mxRecords}"
 
 usage() {
-    echo "Usage: $0 -s sub -g group -z dns-zone [options]"
-    echo "  --sub -s {subscription}         The Azure subscription name or id"
-    echo "  --group -g {resource-group}     The Azure resource group name"
-    echo "  --dns-zone -z {dns-zone}        The Azure DNS Zone name"
-    echo "  [--verify | -v {value}]         Set the verification TXT record; from the Proton Mail settings"
-    echo "  [--spf | -f]                    Set the SPF TXT record to $SPF"
-    echo "  [--mx | -m]                     Set the MX exchange records for $MX10 and $MX20"
-    echo "  [--dkim1 | -1 {value}]          Set the $DKIM1_NAME CNAME record; from the Proton Mail settings"
-    echo "  [--dkim2 | -2 {value}]          Set the $DKIM2_NAME CNAME record; from the Proton Mail settings"
-    echo "  [--dkim3 | -3 {value}]          Set the $DKIM3_NAME CNAME record; from the Proton Mail settings"
-    echo "  [--dmarc | -d]                  Set the $DMARC_NAME TXT record"
-    echo "  [--reset | -r]                  Clear the verification and SPF TXT records"
-    echo "  [--help | -h]                   Show help message"
+    USAGE=$(cat <<EOF
+Usage: $0 -s sub -g group -z dns-zone [options]
+  --sub     | -s {subscription}     The Azure subscription name or id.
+  --group   | -g {resource-group}   The Azure resource group name.
+  --dns-zone | -z {dns-zone}        The Azure DNS Zone name.
+  [--verify | -v {value}]           Set the domain verification TXT record; copy value from the Proton Mail settings.
+  [--spf    | -f]                   Set the SPF TXT record to 'v=spf1 include:_spf.protonmail.ch mx ~all'.
+  [--mx     | -m]                   Set the MX exchange records for 'mail.protonmail.ch' and 'mailsec.protonmail.ch'.
+  [--dkim1  | -1 {value}]           Set the protonmail._domainkey CNAME record; copy value from the Proton Mail settings.
+  [--dkim2  | -2 {value}]           Set the protonmail2._domainkey CNAME record; copy from the Proton Mail settings.
+  [--dkim3  | -3 {value}]           Set the protonmail3._domainkey CNAME record; copy from the Proton Mail settings.
+  [--dmarc  | -d]                   Set the _dmarc TXT record to 'v=DMARC1; p=none'.
+  [--reset  | -r]                   Clear the verification and SPF TXT records.
+  [--help   | -h]                   Show help message.
+EOF
+)
+    echo "$USAGE"
 }
 
 bad_exit() {
